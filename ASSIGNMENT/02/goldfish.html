@@ -1,0 +1,172 @@
+<html>
+<title>190204086: Ans2</title>
+<canvas id="webglcanvas" width="800" height="800" style="border:1px solid black;"></canvas>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=RQ0CU4jPlOIIrCUfm88v_vAFs7k0OGn2RmpAIjyi_9ot3_X7CTWKLctMQnG8uml7EEBMWyBP7bdUFaOUvBbxo1RUPHyns8G-KE56MKOY8pakmZ3yXh4N5O0KmwLB6LMGo5xOm4mXS4Zt6wxzxa2CuGRoP4b6AF3XRhg7VUvsOetYAZJWAi6AVH_K361csy8QGCCxwbBWydVYxYLtBnn0N7i20K91uugJJF3TEdi-0Ymj6yRLpqd0h4s4v_ajYH_4aiTmhy_FCDMxxcGb1TujS5zuzaij2xWTPowxx9PUPsgqIGnpr0TfSdH32ltC95c5k6mYVmi3KicEwSnEUqTquTw9jL3hEfWIrlCHrHbIoA1f7v-8XvSP65M5-AMr1Qtsp349aTM-3yw-8EnWBzKtnvcHj7d2YgGhhTZIQSZVBW2c0txQhkWgxOKuiElCDvzSt_wJvrfmulc2uBpxjgzCiw" charset="UTF-8"></script>
+
+<script>
+    var canvas = document.getElementById("webglcanvas");
+    var gl = canvas.getContext("webgl");
+
+    var vertexShaderSource =
+        `attribute vec3 a_coords;
+        uniform float u_shift;
+        attribute vec3 a_colors;
+        varying vec3 v_color;
+
+        void main() {
+            if (u_shift < 0.9)
+                gl_Position = vec4(a_coords.x + u_shift,
+                                   a_coords.y,
+                                   a_coords.z,
+                                   1.0);
+            else
+                gl_Position = vec4(a_coords.x,
+                                   a_coords.y,
+                                   a_coords.z,
+                                   1.0);
+
+            v_color = a_colors;
+        }`;
+
+    var fragmentShaderSource =
+        `precision mediump float;
+        varying vec3 v_color;
+        void main() {
+            gl_FragColor = vec4(v_color, 1.0);
+        }`;
+
+    var vsh = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(vsh, vertexShaderSource);
+    gl.compileShader(vsh);
+
+    var fsh = gl.createShader(gl.FRAGMENT_SHADER);
+    gl.shaderSource(fsh, fragmentShaderSource);
+    gl.compileShader(fsh);
+
+    var prog = gl.createProgram();
+    gl.attachShader(prog, vsh);
+    gl.attachShader(prog, fsh);
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
+
+    var a_coords_location = gl.getAttribLocation(prog, "a_coords");
+
+    var coords = new Float32Array([
+        -0.1, 0.41, 0.0,
+        -0.3, 0.41, 0.0,
+        -0.3, 0.5, 0.0,
+
+        -0.1, 0.4, 0.0,
+        -0.3, 0.4, 0.0,
+        -0.3, 0.3, 0.0,
+
+        -0.31, 0.41, 0.0,
+        -0.6, 0.41, 0.0,
+        -0.31, 0.5, 0.0,
+
+        -0.31, 0.4, 0.0,
+        -0.6, 0.41, 0.0,
+        -0.31, 0.3, 0.0,
+
+        -0.3, 0.29, 0.0,
+        -0.45, 0.35, 0.0,
+        -0.5, 0.2, 0.0,
+
+        -0.3, 0.51, 0.0,
+        -0.4, 0.6, 0.0,
+        -0.5, 0.45, 0.0,
+
+        -0.6, 0.41, 0.0,
+        -0.8, 0.7, 0.0,
+        -0.8, 0.5, 0.0,
+
+        -0.6, 0.41, 0.0,
+        -0.8, 0.49, 0.0,
+        -0.8, 0.3, 0.0,
+
+        -0.6, 0.41, 0.0,
+        -0.8, 0.29, 0.0,
+        -0.8, 0.1, 0.0,
+
+        -0.1, -0.41, 0.0,
+        -0.3, -0.41, 0.0,
+        -0.3, -0.5, 0.0,
+
+        -0.1, -0.4, 0.0,
+        -0.3, -0.4, 0.0,
+        -0.3, -0.3, 0.0,
+
+        -0.31, -0.41, 0.0,
+        -0.6, -0.41, 0.0,
+        -0.31, -0.5, 0.0,
+
+        -0.31, -0.4, 0.0,
+        -0.6, -0.41, 0.0,
+        -0.31, -0.3, 0.0,
+
+        -0.3, -0.29, 0.0,
+        -0.45, -0.35, 0.0,
+        -0.5, -0.2, 0.0,
+
+        -0.3, -0.51, 0.0,
+        -0.4, -0.6, 0.0,
+        -0.5, -0.45, 0.0,
+
+        -0.6, -0.41, 0.0,
+        -0.8, -0.7, 0.0,
+        -0.8, -0.5, 0.0,
+
+        -0.6, -0.41, 0.0,
+        -0.8, -0.49, 0.0,
+        -0.8, -0.3, 0.0,
+
+        -0.6, -0.41, 0.0,
+        -0.8, -0.29, 0.0,
+        -0.8, -0.1, 0.0,
+    ]);
+
+    // Modify y-coordinates for building
+    for (var i = 1; i < coords.length; i += 3) {
+        coords[i] *= 2.0; // You can adjust the multiplier to change the building height
+    }
+
+    var a_coords_buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, a_coords_buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, coords, gl.STATIC_DRAW);
+    gl.vertexAttribPointer(a_coords_location, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(a_coords_location);
+
+    var u_shift_location = gl.getUniformLocation(prog, "u_shift");
+    var shift = 0.0;
+    gl.uniform1f(u_shift_location, shift);
+
+    var a_colors_location = gl.getAttribLocation(prog, "a_colors");
+    var colors = new Float32Array([
+        0.8, 0.0, 0.0,
+        1.0, 0.65, 0.0,
+        1.0, 1.0, 0.0,
+
+        // ... (same colors as before)
+    ]);
+
+    var a_colors_buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, a_colors_buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
+    gl.vertexAttribPointer(a_colors_location, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(a_colors_location);
+
+    gl.clearColor(0.2, 0.2, 0.5, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.TRIANGLES, 0, 54);
+
+    document.onkeydown = function () {
+        shift = shift + 0.1;
+        gl.uniform1f(u_shift_location, shift);
+
+        gl.clearColor(0.2, 0.2, 0.5, 1.0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.drawArrays(gl.TRIANGLES, 0, 54);
+    };
+</script>
+
+</html>
